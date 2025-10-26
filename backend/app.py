@@ -15,8 +15,9 @@ CORS(app)
 
 @app.route("/api/add-group", methods=["POST"])
 def add_group():
-    group_name = request.get_json("groupName")
-    username = request.get_json("username")
+    data = request.get_json()
+    group_name = str(data.get("groupName", "")).strip()
+    username = str(data.get("username", "")).strip()
 
     if not group_name:
         return jsonify({"success": False, "message": "No group name given!", "data": group_name})
@@ -25,6 +26,11 @@ def add_group():
     grouptask.insert_one({"groupName": group_name, "username": username, "createdAt": datetime.now()})
 
     return jsonify({"success": True, "message": "Group created!", "data": group_name})
+
+@app.route("/api/get-groups", methods=["GET"])
+def get_groups():
+    groups = list(grouptask.find({}, {"_id": 0, "createdAt": 0, "username": 0}))
+    return jsonify({"success": True, "message": "Groups recieved", "data": groups})
 
 if __name__ == "__main__":
     app.run(debug=True)

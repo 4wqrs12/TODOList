@@ -1,10 +1,12 @@
 import { useState } from "react";
-import Group from "./components/Group";
+import GroupCreate from "./components/GroupCreate";
+import GroupsBox from "./components/GroupsBox";
 
 function App() {
   return (
     <div>
-      <Group />
+      <GroupCreate />
+      <GroupsBox />
     </div>
   );
 }
