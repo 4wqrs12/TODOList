@@ -7,6 +7,10 @@ function GroupCreate() {
   const [searchTerm, setSearchTerm] = useState("");
   const [groups, setGroups] = useState([]);
 
+  const filteredData = groups.filter((i) => {
+    return i.groupName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   async function fetchGroups() {
     const res = await fetch("http://localhost:5000/api/get-groups");
     const data = await res.json();
@@ -37,12 +41,9 @@ function GroupCreate() {
   function handleChange(e) {
     setGroupName(e.target.value);
   }
-  const filterGroup = groups.filter((i) =>
-    i.groupName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
   function handleSearch(e) {
     setSearchTerm(e.target.value);
-    filterGroup;
   }
 
   return (
@@ -61,9 +62,14 @@ function GroupCreate() {
         onChange={handleSearch}
         placeholder="Search..."
       ></input>
-      <div className="pt-6">
-        {groups.map((v, i) => (
-          <p key={i}>{v.groupName}</p>
+      <div className="flex flex-col items-center justify-center gap-[15px] pt-6">
+        {filteredData.map((item, index) => (
+          <p
+            className="italic font-semibold text-blue-400 bg-neutral-200 px-10 rounded-lg shadow-md hover:bg-neutral-500 hover:text-blue-100 hover:scale-105 transition duration-50 cursor-pointer"
+            key={index}
+          >
+            {item.groupName}
+          </p>
         ))}
       </div>
     </div>
