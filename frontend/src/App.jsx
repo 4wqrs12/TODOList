@@ -1,12 +1,19 @@
 import { useState } from "react";
-import GroupCreate from "./components/GroupCreate";
-import GroupsBox from "./components/GroupsBox";
+import { Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Home from "./components/Home";
+import About from "./components/About";
+import Connect from "./components/Connect";
 
 function App() {
   return (
     <div>
-      <GroupCreate />
-      <GroupsBox />
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Connect />} />
+      </Routes>
     </div>
   );
 }
