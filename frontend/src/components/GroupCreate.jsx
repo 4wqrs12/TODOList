@@ -9,6 +9,7 @@ function GroupCreate() {
   const [groups, setGroups] = useState([]);
   const [groupItem, setGroupItem] = useState("");
   const [groupTasks, setGroupTasks] = useState([]);
+  const [showGroupTasks, setShowGroupTasks] = useState(false);
 
   const filteredData = groups.filter((i) => {
     return i.groupName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -53,13 +54,16 @@ function GroupCreate() {
   }
 
   async function handleGroupItem(e) {
-    setGroupItem(e.target.textContent);
     const res = await fetch(
-      `http://localhost:5000/api/get-task?q=${encodeURIComponent(groupItem)}`
+      `http://localhost:5000/api/get-task?q=${encodeURIComponent(
+        e.target.textContent
+      )}`
     );
     const data = await res.json();
     if (data.success) {
+      setGroupItem(e.target.textContent);
       setGroupTasks(data.data);
+      setShowGroupTasks(true);
     }
   }
 
@@ -99,7 +103,13 @@ function GroupCreate() {
             {item.groupName}
           </button>
         ))}
-        <GroupList groupName={groupItem} tasks={groupTasks} />
+        {showGroupTasks && (
+          <GroupList
+            groupName={groupItem}
+            tasks={groupTasks}
+            showGroup={setShowGroupTasks}
+          />
+        )}
       </div>
     </div>
   );

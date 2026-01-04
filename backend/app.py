@@ -79,5 +79,24 @@ def get_task():
 
     return jsonify({"success": True, "message": "Tasks recieved", "data": task.get("taskArray", [])})
 
+@app.route("/api/remove-task", methods=["POST"])
+def remove_task():
+    data = request.get_json()
+    task_name = data.get("taskName", "").strip()
+    group_name = data.get("groupName", "").strip()
+
+    if not grouptask.find_one({"groupName": group_name}):
+        return jsonify({"success": False, "message": "Group does not exist", "data": [task_name, group_name]})
+    
+    group = grouptask.find_one({"groupName": group_name})
+    task_list = group["taskArray"]
+    if task_name not in task_list:
+        return jsonify({"success": False, "message": "Task not in list", "data": [task_name, group_name]})
+    task_list.remove(task_name)
+    grouptask.update_one({"_id": group["_id"]}, {"$set": {"taskArray": task_list}})
+    return jsonify({"success": True, "message": "Task removed", "data": [task_name, group_name]})
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
