@@ -90,9 +90,12 @@ def remove_task():
     
     group = grouptask.find_one({"groupName": group_name})
     task_list = group["taskArray"]
+
     if task_name not in task_list:
         return jsonify({"success": False, "message": "Task not in list", "data": [task_name, group_name]})
+    
     task_list.remove(task_name)
+    
     grouptask.update_one({"_id": group["_id"]}, {"$set": {"taskArray": task_list}})
     return jsonify({"success": True, "message": "Task removed", "data": [task_name, group_name]})
 
